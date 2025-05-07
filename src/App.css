@@ -1,0 +1,787 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.game-info {
+  text-align: center;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 600px;
+  background-color: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.game-info p {
+  margin: 5px 0;
+}
+
+.score-display {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.total-score {
+  font-weight: bold;
+  color: #2196F3;
+  font-size: 1.1em;
+}
+
+.level-info {
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+.timer-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 10px 0;
+}
+
+.timer, .best-score {
+  font-size: 1em;
+  font-weight: bold;
+  color: #333;
+  background-color: #e0e0e0;
+  padding: 5px 15px;
+  border-radius: 20px;
+}
+
+.best-score {
+  background-color: #FFF9C4;
+}
+
+.game-container {
+  width: 100%;
+  max-width: 600px;
+  height: 600px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.game-board {
+  width: 100%;
+  height: 100%;
+}
+
+.button-container {
+  margin-top: 15px;
+}
+
+.reset-button {
+  padding: 10px 20px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.reset-button:hover {
+  background-color: #d32f2f;
+}
+
+.game-complete {
+  margin-top: 20px;
+  text-align: center;
+  padding: 20px;
+  background-color: #e8f5e9;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+}
+
+.game-complete h2 {
+  color: #2e7d32;
+  margin-bottom: 15px;
+}
+
+.score-breakdown {
+  background-color: white;
+  padding: 10px;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.score-breakdown p {
+  margin: 5px 0;
+}
+
+.total-level-score {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #FF9800;
+  margin-top: 10px !important;
+}
+
+.new-record {
+  color: #FF9800;
+  font-weight: bold;
+  animation: pulse 1s infinite;
+  margin: 10px 0;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.next-level-button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.next-level-button:hover {
+  background-color: #388e3c;
+}
+
+/* Previous styles remain the same, add these new styles */
+
+.sound-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.sound-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.sound-on {
+  color: #4CAF50;
+}
+
+.sound-off {
+  color: #f44336;
+}
+
+/* Add animation for correct clicks */
+@keyframes pulse-green {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Add animation for incorrect clicks */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+.correct-click {
+  animation: pulse-green 0.3s;
+}
+
+.incorrect-click {
+  animation: shake 0.5s;
+}
+
+/* Add these new animations to your existing CSS */
+
+/* Line drawing animation */
+.line-draw {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: drawLine 0.5s forwards;
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Dot connection animations */
+.correct-click {
+  animation: pulse-green 0.3s, expand 0.5s;
+}
+
+.incorrect-click {
+  animation: shake 0.5s, pulse-red 0.5s;
+}
+
+.connected-dot {
+  transition: all 0.3s;
+  filter: drop-shadow(0 0 3px rgba(46, 125, 50, 0.7));
+}
+
+@keyframes pulse-green {
+  0% { fill: #4CAF50; }
+  50% { fill: #81C784; }
+  100% { fill: #4CAF50; }
+}
+
+@keyframes pulse-red {
+  0% { fill: #f44336; }
+  50% { fill: #e57373; }
+  100% { fill: #f44336; }
+}
+
+@keyframes expand {
+  0% { r: 2; }
+  50% { r: 3; }
+  100% { r: 2; }
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+/* Level completion animation */
+.game-complete {
+  animation: fadeIn 0.5s, bounce 0.5s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes bounce {
+  0% { transform: scale(0.9); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Particle effects for completion */
+.particle {
+  position: absolute;
+  background-color: gold;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: particle-float 1s ease-out forwards;
+}
+
+@keyframes particle-float {
+  0% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty));
+    opacity: 0;
+  }
+}
+
+/* Glow effect for new records */
+.new-record {
+  position: relative;
+}
+
+.new-record::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: radial-gradient(circle, rgba(255,215,0,0.4) 0%, rgba(255,215,0,0) 70%);
+  border-radius: 10px;
+  animation: glow 1.5s infinite alternate;
+  z-index: -1;
+}
+
+@keyframes glow {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Add these new styles to your existing CSS */
+
+/* Badge unlock notification */
+.badge-unlocked {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  z-index: 100;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  animation: badgePopIn 0.5s, badgeFloat 3s ease-in-out infinite;
+}
+
+.badge-icon {
+  font-size: 3rem;
+}
+
+.badge-content {
+  text-align: center;
+}
+
+.badge-content h3 {
+  margin: 0 0 5px 0;
+  font-size: 1.5rem;
+}
+
+.badge-content p {
+  margin: 0 0 5px 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.badge-content small {
+  opacity: 0.8;
+}
+
+@keyframes badgePopIn {
+  from {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes badgeFloat {
+  0%, 100% {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(-10px);
+  }
+}
+
+/* Level selector with badges */
+.level-selector {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.level-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background-color: #e0e0e0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.3s;
+  position: relative;
+  padding: 0;
+}
+
+.level-button:hover:not(:disabled) {
+  transform: scale(1.1);
+}
+
+.level-button.active {
+  transform: scale(1.1);
+  box-shadow: 0 0 0 3px #4CAF50;
+}
+
+.level-button.unlocked {
+  background-color: transparent;
+}
+
+.level-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.badge-preview {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+  transition: all 0.3s;
+}
+
+.level-number {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Badge tooltip */
+.level-button.unlocked:hover::after {
+  content: attr(data-badge-name);
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.level-button.unlocked:hover::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.level-button.unlocked:hover::after,
+.level-button.unlocked:hover::before {
+  opacity: 1;
+}
+
+/* Add these new styles to your existing CSS */
+
+/* Focus direction button */
+.focus-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  z-index: 10;
+}
+
+.focus-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  transform: scale(1.1);
+}
+
+.focus-button.active {
+  background-color: rgba(33, 150, 243, 0.2);
+  color: #2196F3;
+}
+
+/* Focus direction overlay */
+.focus-direction-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+  animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Update game container for proper layering */
+.game-container {
+  position: relative;
+  /* ... (other existing styles remain the same) */
+}
+
+/* Add to game info */
+.game-info p.hint {
+  font-style: italic;
+  color: #666;
+  margin-top: 5px;
+  font-size: 0.9em;
+}
+
+/* Add these new styles to your existing CSS */
+
+/* Popup backdrop */
+.popup-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 100;
+  animation: fadeIn 0.3s;
+}
+
+/* Game complete popup */
+.game-complete-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 15px;
+  padding: 25px;
+  z-index: 101;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.popup-content {
+  text-align: center;
+}
+
+@keyframes popIn {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Popup buttons */
+.popup-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.next-level-button {
+  padding: 12px 25px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  min-width: 120px;
+}
+
+.next-level-button:hover {
+  background-color: #388e3c;
+  transform: translateY(-2px);
+}
+
+.replay-button {
+  padding: 12px 25px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  min-width: 120px;
+}
+
+.replay-button:hover {
+  background-color: #0b7dda;
+  transform: translateY(-2px);
+}
+
+/* Update score breakdown */
+.score-breakdown {
+  background-color: #f5f5f5;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 15px 0;
+}
+
+.total-level-score {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #FF9800;
+  margin-top: 10px !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .game-complete-popup {
+    padding: 20px 15px;
+  }
+  
+  .popup-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .next-level-button,
+  .replay-button {
+    width: 100%;
+  }
+}
+
+/* Add to your CSS */
+.timer {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4CAF50;
+  transition: all 0.3s;
+}
+
+.timer.warning {
+  color: #F44336;
+  animation: pulse 0.5s infinite alternate;
+}
+
+@keyframes pulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
+.mode-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.mode-selector button {
+  padding: 8px 16px;
+  border: 2px solid #2196F3;
+  background: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.mode-selector button.active {
+  background-color: #2196F3;
+  color: white;
+}
+
+.mode-selector button:hover {
+  transform: translateY(-2px);
+}
+
+/* Add to CSS */
+.timer.warning::after {
+  content: '';
+  position: absolute;
+  background: rgba(244, 67, 54, 0.2);
+  border-radius: 50%;
+  animation: ripple 1s infinite;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(2);
+  }
+}
+
+/* Time freeze effects */
+.time-freeze-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(173, 216, 230, 0.3);
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.snowflake {
+  font-size: 5rem;
+  animation: float 2s infinite ease-in-out;
+}
+
+.freeze-timer {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2196F3;
+  background: white;
+  padding: 5px 15px;
+  border-radius: 20px;
+  margin-top: 10px;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(10deg); }
+}
+
+/* Update timer display during freeze */
+.timer.frozen {
+  color: #2196F3;
+  animation: none;
+}
+
+/* Add to your streak notification */
+.streak-notification.freeze-active {
+  background-color: #2196F3;
+}
