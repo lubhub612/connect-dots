@@ -204,6 +204,7 @@ useEffect(() => {
   const stopTimer = () => {
     clearInterval(timerRef.current);
     setIsRunning(false);
+    //setCountdownTime(60); // Reset timer
   };
 
   // Handle dot click
@@ -244,7 +245,7 @@ useEffect(() => {
         setTimeFrozen(true);
         setFreezeRemaining(3); // Freeze for 3 seconds
         playSound('freeze'); // Add a special sound effect
-      } */
+      }  */
 
       if (gameMode === 'countdown' && 
         newStreak >= config.freezeStreakThreshold && 
@@ -254,7 +255,7 @@ useEffect(() => {
       setFreezesUsed(freezesUsed + 1);
       // Reset streak counter to prevent immediate re-freeze
       setCurrentStreak(0); 
-    }
+    } 
 
       // Correct dot clicked
       const updatedDots = [...dots];
@@ -312,9 +313,18 @@ useEffect(() => {
 
   // Handle next level
   const handleNextLevel = () => {
-    setShowBadge(null);
-    setLevel(level + 1);
-    generateDots();
+
+    if(gameMode === 'countdown' && countdownTime <= 0) {
+      setGameComplete(false);
+      stopTimer();
+      generateDots();
+      setCountdownTime(60)
+    } else {
+      setShowBadge(null);
+      setLevel(level + 1);
+      generateDots();
+      setCountdownTime(60); 
+    }
   };
 
   // Reset the current level
